@@ -109,7 +109,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     //get monster-type from parameters
 	//setup the combat with monster-type
 	//add to agent response text that says what monster-type you chose and displays 3 next options - attack, heal and defend
-	
+      const monsterType = parameters['monster-type'];
+      console.log('requestToFightHandler');
+      await cloudDB.setUpCombat(monsterType);
+      agent.add(`You have chosen to fight the ${monsterType} . Do you want to attack, defend or heal?`);
+
   }
 
   async function combatCommandSelectionHandler(agent) {
@@ -119,7 +123,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 	//update health on db (get back remaining life)
 	//add to agent add to agent response text that says what evey side chose and what is the life balance
 	//if the fight continues, don't forget to add fighting context (agent.context.set)
-	//if the fight ends - check by remaining life who won and notify the player. make sure that fighting context is not added in such a case.  
+	//if the fight ends - check by remaining life who won and notify the player. make sure that fighting context is not added in such a case.
   }
 
 
