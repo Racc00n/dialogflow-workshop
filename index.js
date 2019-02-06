@@ -109,11 +109,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     //get monster-type from parameters
 	//setup the combat with monster-type
 	//add to agent response text that says what monster-type you chose and displays 3 next options - attack, heal and defend
-      const monsterType = parameters['monster-type'];
-      console.log('requestToFightHandler');
-      await cloudDB.setUpCombat(monsterType);
-      agent.add(`You have chosen to fight the ${monsterType} . Do you want to attack, defend or heal?`);
-
   }
 
   async function combatCommandSelectionHandler(agent) {
@@ -124,26 +119,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 	//add to agent add to agent response text that says what evey side chose and what is the life balance
 	//if the fight continues, don't forget to add fighting context (agent.context.set)
 	//if the fight ends - check by remaining life who won and notify the player. make sure that fighting context is not added in such a case.
-      const playerAction = parameters['combat-command'];
-      const monsterAction = game.rollMonsterAction();
-      const roundResult = game.calcRoundResult(playerAction, monsterAction);
-      console.log('combatCommandSelectionHandler');
-      const remainingLife = await cloudDB.updateHealth(roundResult.player, roundResult.monster);
-      agent.add(`You chose ${playerAction}, monster chose ${monsterAction}, your life in now ${remainingLife.player}, monster's life is now ${remainingLife.monster}`);
-      if (remainingLife.player === 0) {
-          logAgent(agent);
-          //delete the context, actually since the lifespan is "1", its not mandatory for this case.
-          agent.context.delete('fighting');
-          agent.add(`You Lost`);
-          logAgent(agent);
-      } else if (remainingLife.monster === 0) {
-          logAgent(agent);
-          agent.context.delete('fighting');
-          agent.add(`You win`);
-          logAgent(agent);
-      } else {
-          agent.context.set('fighting', 1);
-      }
   }
 
 
