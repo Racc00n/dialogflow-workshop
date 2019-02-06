@@ -97,7 +97,7 @@ function logAgent(agent) {
   console.log(util.inspect(agent, {showHidden: true, depth: 1}));
 }
 const game = new Game();
-const cloudDB = new CloudDB(db);
+const cloudDB = new CloudDB(db,game);
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   const agent = new WebhookClient({request, response});
