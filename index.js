@@ -97,7 +97,7 @@ function logAgent(agent) {
   console.log(util.inspect(agent, {showHidden: true, depth: 1}));
 }
 const game = new Game();
-const cloudDB = new CloudDB(db);
+const cloudDB = new CloudDB(db,game);
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   const agent = new WebhookClient({request, response});
@@ -132,6 +132,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       agent.add(`You chose ${playerAction}, monster chose ${monsterAction}, your life in now ${remainingLife.player}, monster's life is now ${remainingLife.monster}`);
       if (remainingLife.player === 0) {
           logAgent(agent);
+          //delete the context, actually since the lifespan is "1", its not mandatory for this case.
           agent.context.delete('fighting');
           agent.add(`You Lost`);
           logAgent(agent);
